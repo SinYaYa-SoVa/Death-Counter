@@ -1,16 +1,15 @@
 from tkinter import *
 from tkinter import messagebox
-from tkinter.ttk import Progressbar
 from tkinter import Menu
 
 window = Tk()
 window.geometry('250x180')
 window.title("Death Counter")
 
-version = '0.1'
+version = '0.2'
 number = 0
-limit = 100
-bar_value = 0
+limit = 0
+left = limit - number
 
 
 def about():
@@ -25,34 +24,37 @@ def ver():
 
 
 def addition():
-    global number, limit, bar_value
+    global number, limit
     number += 1
     visual_counter.configure(text=str(number))
-    bar_value += number / limit * 100
-    bar['value'] = bar_value
+    limiter_label.configure(text='осталось ' + str(limit - number) + ' смертей')
+    if number == limit:
+        messagebox.showwarning('Внимание!', 'Вы достигли лимита!')
 
 
 def subtraction():
-    global number, limit, bar_value
+    global number, limit
     if number == 0:
         messagebox.showwarning('Внимание!', 'Счетчик и так уже на нуле!')
     else:
         number -= 1
         visual_counter.configure(text=str(number))
-        bar_value -= number/limit * 100
-        bar['value'] = bar_value
+        limiter_label.configure(text='осталось ' + str(limit - number) + ' смертей')
 
 
 def limiter():
     def set_lim():
         global limit
         limit = int(limit_input.get())
-        bar.pack()
+        messagebox.showinfo('Ограничитель', 'Ваш ограничитель равен ' + limit_input.get())
+        limiter_label.configure(text='осталось ' + str(limit - number) + ' смертей')
+        limiter_label.pack(side=BOTTOM)
 
     def reset_lim():
         global limit
         limit = 0
-
+        messagebox.showinfo('Ограничитель', 'Ваш ограничитель сброшен!')
+    
     global limit
 
     limiter_window = Toplevel()
@@ -68,13 +70,14 @@ def limiter():
     limit_label = Label(frame_limiter, text='Введите предел по смертям:')
     limit_label.pack(side=LEFT)
     limit_input = Entry(frame_limiter, width=10)
+    limit_input.insert(0, 10)
     limit_input.pack(side=LEFT)
     set_limit = Button(frame_limiter_bot, text='Установить', command=set_lim)
     set_limit.pack(side=LEFT)
     reset_limit = Button(frame_limiter_bot, text='Очистить', command=reset_lim)
     reset_limit.pack(side=LEFT)
 
-    # limiter_window.iconbitmap('favicon.ico')
+    limiter_window.iconbitmap('favicon.ico')
 
 
 menu = Menu(window)
@@ -87,8 +90,8 @@ menu.add_cascade(label='About', menu=new_item)
 frame = Frame(window)
 frame.pack()
 
-bar_frame = Frame(window)
-bar_frame.pack()
+limiter_frame = Frame(window)
+limiter_frame.pack()
 
 mid_frame = Frame(window)
 mid_frame.pack()
@@ -110,7 +113,8 @@ plus_btn.pack(side=LEFT)
 set_limit_btn = Button(bottom_frame, text="Ограничитель", command=limiter)
 set_limit_btn.pack(side=BOTTOM)
 
-bar = Progressbar(bar_frame, length=200)
+limiter_label = Label(limiter_frame, text='осталось ' + str(limit - number) + ' смертей')
 
-# window.iconbitmap('favicon.ico')
+
+window.iconbitmap('favicon.ico')
 window.mainloop()
