@@ -1,5 +1,5 @@
 # Death-Counter
-**Ver.: 0.1**    
+**Ver.: 0.2**    
 A simple death counter for my friend [KeKuX_TM](https://www.twitch.tv/kekux_tm)
 
 ## Features:
